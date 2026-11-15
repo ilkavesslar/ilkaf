@@ -1,0 +1,16 @@
+---
+description: ILKA digital twin and site hierarchy rules
+alwaysApply: false
+---
+
+# Digital twin
+
+Model sites hierarchically:
+
+Site → Building → Floor → Zone → Camera/Sensor → Safety Event
+
+Twin views should eventually support spatial mapping, zone polygons, camera placement, live status, incidents, and historical events.
+
+No digital-twin implementation exists yet. Do not invent GeoJSON or map schemas that are not in `docs/DIGITAL_TWIN.md`.
+
+Persist spatial entities in PostgreSQL with versioned migrations when this feature is built.

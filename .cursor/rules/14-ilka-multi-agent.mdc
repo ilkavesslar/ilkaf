@@ -1,0 +1,32 @@
+---
+description: ILKA four-agent workflow, default Builder, source of truth, no fake completion
+alwaysApply: true
+---
+
+# Multi-agent (Cursor)
+
+**Default implementation agent: Builder** (`ilka-builder`). Switch role by task:
+
+- **Architect** — unclear requirements, new module, ADR, API/DB contracts, tech choice
+- **QA/Security** — after implementation, before merge, security bugs, production readiness
+- **AI/CV** — cameras, video, models, inference, detection-to-event mapping
+
+## Rules A–G
+
+A. Inspect architecture docs and relevant files before edits.  
+B. Small, reviewable changes.  
+C. Meaningful tests with real behavior.  
+D. No secrets in git or logs.  
+E. Architecture/SoR/new service requires an ADR.  
+F. Never call scaffold/mock **IMPLEMENTED**. Label `[MOCK / SYNTHETIC]`.  
+G. Design for industrial reliability, security, observability, failure handling, maintainability, scale.
+
+## Source of truth
+
+`docs/PROJECT-OVERVIEW.md`, `REQUIREMENTS.md`, `ARCHITECTURE.md`, `SYSTEM-ARCHITECTURE.md`, `CAMERA-ARCHITECTURE.md`, `AI-PIPELINE.md`, `EVENT-ARCHITECTURE.md`, `SECURITY-ARCHITECTURE.md`, `DATABASE-ARCHITECTURE.md`, `DEVELOPMENT-WORKFLOW.md`, `TESTING-STRATEGY.md`, `ROADMAP.md`, `docs/DECISIONS/`. If they conflict: **stop** and request an ADR — do not guess.
+
+## Handoff
+
+Architect plan → Builder (one feature branch) → QA/Security → AI/CV if video/CV → Codex → Claude if needed → Builder fixes → QA → human merge.
+
+Do not have two agents edit the same feature branch blindly. Reports for non-trivial work: `docs/agent-reports/`.

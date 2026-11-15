@@ -1,0 +1,19 @@
+---
+description: ILKA Python backend conventions
+globs: backend/**/*.py
+alwaysApply: false
+---
+
+# Backend
+
+Target: Python 3.11+. FastAPI + SQLAlchemy 2 async is **PROVISIONAL**. Exact package layout is **NOT DECIDED**; keep using the existing `backend/app/` folders unless `docs/DECISIONS.md` changes them.
+
+When implementing:
+
+- Prefer routes in `backend/app/api/`, config in `core/`, models in `models/`, domain logic in `services/` if those dirs remain.
+- Typed request/response models at the API edge. No untyped dicts as public payloads.
+- Fail-safe: one stream or worker failure must not crash the process or silently drop alerts.
+- Never `except: pass`. Log structured errors with a request/correlation ID.
+- AuthZ checks on every mutating and sensitive read path.
+
+Do not introduce Redis, extra brokers, or new services unless the architecture docs require them.

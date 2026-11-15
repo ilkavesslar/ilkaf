@@ -1,0 +1,14 @@
+---
+description: ILKA structured logging and observability rules
+alwaysApply: false
+---
+
+# Observability
+
+Use structured JSON logs with UTC ISO-8601 timestamps, service name, severity, and correlation/request IDs.
+
+Do not log secrets, JWTs, camera credentials, or raw connection strings.
+
+Sentry is for diagnosing exceptions, regressions, and performance — only after a DSN exists in env. Do not hard-code DSNs. The Sentry MCP plugin must be authenticated by a human before agents query issues.
+
+Prometheus/Grafana configs under `infrastructure/monitoring/` are planned, not implemented.

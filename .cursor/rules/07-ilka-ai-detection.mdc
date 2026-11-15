@@ -1,0 +1,15 @@
+---
+description: ILKA AI and CV detection rules
+globs: "{ai,cv,tests/cv_ai}/**/*"
+alwaysApply: false
+---
+
+# AI detection
+
+Keep stages separate: observation → detection → event → verification → incident → alert → action (`docs/AI-PIPELINE.md`).
+
+Every observation needs confidence, model version, camera/zone IDs, timestamps, and geometry.
+
+Do not treat a model output as a confirmed incident without threshold + persistence/de-dupe + HITL or an explicit audited policy.
+
+Label synthetic frames `[MOCK / SYNTHETIC]`.

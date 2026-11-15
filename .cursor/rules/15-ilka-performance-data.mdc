@@ -1,0 +1,34 @@
+---
+description: ILKA pagination, optimistic UI, and backend-first data rules
+alwaysApply: true
+---
+
+# Performance and data
+
+The backend is the source of truth. Show a lasting success only after the API confirms the change.
+
+## Optimistic UI
+
+Use it only for low-risk reversible actions (mark notification read, non-critical preference, dismiss a UI-only notice):
+
+1. Update the UI immediately and keep the previous snapshot.
+2. Send one request. Ignore repeated clicks.
+3. On success, replace the pending state with the server response.
+4. On failure, restore the snapshot and say the change was not saved.
+
+Wait for the server before treating these as done: incidents, roles, permissions, disabling a user, organization or site access, deletes, camera configuration, authentication, security, or safety records.
+
+## Lists
+
+Do not load a full table into the client or paginate it in React.
+
+- Admin collections (users, organizations, sites, cameras, incidents, notifications): offset pages. Response: `items`, `page`, `page_size`, `has_next`. Include `total` only when the count is cheap.
+- Growing streams (observations, audit logs, detection history): cursor pages. Response: `items`, `page_size`, `has_next`, `next_cursor`.
+- The API enforces a maximum `page_size`, filters and sorts in SQL, selects needed columns, and applies organization and site scope in the query.
+- No unrestricted list endpoint. A new index needs a migration and a real query that uses it.
+
+## Work placement
+
+Inference, video processing, large aggregation, reports, and security decisions run on the backend. The client requests work, shows server-reported status, and does not invent progress. Long work uses a job: request, validate, background job, status, refresh. Do not hold an HTTP request open for that.
+
+Do not store session tokens in browser storage. Do not present stale camera or incident status as live. One failed widget must not blank the rest of the page. Each data page handles loading, refresh, empty, page fetch, network, permission, and server failure.

@@ -1,0 +1,12 @@
+---
+description: ILKA code review checklist aligned with CODEX.md
+alwaysApply: false
+---
+
+# Code review
+
+Before calling a feature complete, review correctness, security, performance, scalability, maintainability, tests, error handling, logging, architecture boundaries, database impact, API compatibility, UX, and accessibility.
+
+Flag bugs, vulnerabilities, unnecessary complexity, missing tests, and boundary violations.
+
+Significant changes: Cursor implements → tests → Cursor self-review → Codex (`CODEX.md`) → Claude if architecture/CV/UX is heavy → fixes → tests → human approval. Never approve happy-path-only safety paths.

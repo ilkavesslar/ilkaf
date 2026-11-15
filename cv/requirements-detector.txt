@@ -1,0 +1,14 @@
+# Optional CPU person detector extras. NOT a FastAPI/backend runtime dependency.
+# Install CPU wheels from https://pytorch.org/get-started/locally/
+# Do not install CUDA builds for ILKA M3.
+#
+#   pip install -r cv/requirements-detector.txt
+#
+# Pin range matches Python 3.11 and TorchVision SSDLite320 MobileNetV3-Large
+# on platforms that publish torch>=2.4 wheels (Linux CI / Apple Silicon).
+#
+# Intel macOS (x86_64): official torch>=2.4 wheels are not published. Use
+# cv/requirements-detector-macos-x86_64.txt and docs/development/mac-setup.md.
+
+torch>=2.4.0,<2.7.0
+torchvision>=0.19.0,<0.22.0

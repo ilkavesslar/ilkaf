@@ -1,0 +1,15 @@
+---
+description: ILKA documentation accuracy rules
+globs: "{docs,*.md}/**/*.md"
+alwaysApply: false
+---
+
+# Documentation
+
+Document what exists. Use **IMPLEMENTED**, **SCAFFOLDED**, **PLANNED**, **PROVISIONAL**. Mark gaps `TODO`, `DECISION REQUIRED`, or **NOT DECIDED**.
+
+Do not write fake OpenAPI, fake DDL, or fake dashboards.
+
+When behavior or schema changes, update the matching file under `docs/` (architecture, API, database, security, testing).
+
+Record approved tech choices in `docs/DECISIONS.md`. Do not silently promote provisional choices to confirmed.

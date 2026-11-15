@@ -1,0 +1,19 @@
+# Intel macOS (x86_64) CPU-only pins for the provisional lab person detector.
+# NOT a FastAPI/backend runtime dependency. Install only into `.venv-cv`.
+#
+# Official PyTorch no longer publishes torch>=2.4 / torchvision>=0.19 wheels for
+# Intel Mac. Use this file on x86_64 macOS instead of cv/requirements-detector.txt.
+#
+#   python3.11 -m venv .venv-cv
+#   .venv-cv/bin/python -m pip install -U pip
+#   .venv-cv/bin/pip install -r cv/requirements-detector-macos-x86_64.txt
+#
+# Do not install CUDA builds. Do not mix these packages into micromamba/conda
+# with a second TorchVision from another channel (see docs/development/mac-setup.md).
+
+numpy>=1.26,<2
+torch==2.2.2
+torchvision==0.17.2
+opencv-python-headless==4.10.0.84
+pytest>=8.3
+pytest-asyncio>=0.24

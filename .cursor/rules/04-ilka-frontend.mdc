@@ -1,0 +1,18 @@
+---
+description: ILKA React TypeScript frontend conventions
+globs: frontend/**/*.{ts,tsx,css,html}
+alwaysApply: false
+---
+
+# Frontend
+
+Target: React + TypeScript. Vite and exact UI architecture are **PROVISIONAL** / **NOT DECIDED**. UI is **SCAFFOLDED** only.
+
+When implementing:
+
+- Prefer existing folders (`components/`, `hooks/`, `services/`, `types/`, `views/`) unless DECISIONS.md changes them.
+- Match backend contracts; do not silently reshape fields.
+- Never hard-code secrets. Public frontend env only (e.g. `VITE_*` if Vite is chosen).
+- Treat live video, alerts, and employee data as sensitive in the UI (role-gated routes).
+- Prefer accessible forms, tables, and keyboard navigation for operator consoles.
+- Do not present mock camera feeds as real without `[MOCK / SYNTHETIC]`.

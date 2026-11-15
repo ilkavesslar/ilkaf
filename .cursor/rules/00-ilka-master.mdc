@@ -1,0 +1,20 @@
+---
+description: ILKA master engineering constitution for every agent session
+alwaysApply: true
+---
+
+# ILKA master rule
+
+Inspect before modifying. Understand existing architecture. Make the smallest safe change. Follow existing conventions. Avoid unnecessary dependencies.
+
+Never expose secrets. Never break existing APIs without a migration plan. Write or update tests. Run relevant tests. Review the git diff. Check for regressions. Update documentation when required.
+
+Never make destructive production changes. Ask for human approval before irreversible actions (schema apply to production, branch deletion, database drops, force-push, file-tree deletion).
+
+Agents must not: delete the repository, reset Git history, drop/truncate databases, modify production data, expose secrets, merge to `main`, or deploy production.
+
+Do not invent application code, schemas, or live telemetry. Label any synthetic data `[MOCK / SYNTHETIC]`. Application code is **SCAFFOLDED** only until Phase 1 starts.
+
+Never silently change architecture (new service, new SoR, Redis) without an ADR. Never remove functionality without justification.
+
+Source of truth: `AGENTS.md`, `CODEX.md`, `CONTRIBUTING.md`, `docs/README.md`.

@@ -1,0 +1,13 @@
+---
+description: ILKA camera ingestion and streaming rules
+globs: cv/**/*
+alwaysApply: false
+---
+
+# Camera
+
+Production cameras are **PoE IP** (RTSP; ONVIF where supported). Laptop webcams are `[MOCK / SYNTHETIC]` only.
+
+Isolate vendors behind adapters (identity, secret-ref stream, health). Do not assume central cloud inference. Dropouts must surface as camera unavailable.
+
+Never commit camera passwords. Browser protocol is **NOT DECIDED** — see `docs/CAMERA-ARCHITECTURE.md`.

@@ -1,0 +1,17 @@
+---
+description: ILKA testing pyramid and Playwright E2E rules
+globs: "{tests,frontend,backend}/**/*"
+alwaysApply: false
+---
+
+# Testing
+
+Layers: unit → integration → API → database → AI/model → camera/service → E2E → performance → security.
+
+Every major feature needs automated tests. Tests that cannot run because the app does not exist yet must be documented, not faked as passing.
+
+Use Playwright for critical operator journeys (login, dashboard, cameras, incidents, alerts, RBAC). Patterns live in `tests/e2e/`. Do not install extra E2E stacks.
+
+No production data in tests. Use isolated Neon branches or marked synthetic fixtures.
+
+A change without tests is incomplete (`AGENTS.md` Principle 7).

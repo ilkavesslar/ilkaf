@@ -1,0 +1,23 @@
+---
+description: ILKA modular architecture boundaries and service rules
+alwaysApply: true
+---
+
+# Architecture
+
+Keep boundaries: frontend, backend/API, database, AI/ML, camera ingestion, detection, notifications, infrastructure, observability.
+
+Do not create microservices without a documented reason in `docs/DECISIONS.md`. Prefer a modular monolith until scale or isolation is proven.
+
+Phase 1 target is a **modular monolith**: frontend → backend API → Neon. Do not add separate AI, CV, camera, Redis, worker, or notification *services* until `docs/DECISIONS.md` records a need.
+
+Layout (**SCAFFOLDED** directories; no application runtime):
+
+- `frontend/` React + TypeScript operations UI (exact UI kit **NOT DECIDED**)
+- `backend/` Python API (FastAPI **PROVISIONAL**)
+- `cv/`, `ai/` separable modules, not separate deployables in Phase 1
+- `database/` migrations/schemas (tool **NOT DECIDED**)
+- `infrastructure/` Docker/k8s **PROVISIONAL** / **NOT DECIDED**
+- `tests/` unit through E2E
+
+Cross-boundary contracts must be typed (TypeScript; Python types; OpenAPI when an API exists). See `docs/ARCHITECTURE.md`.

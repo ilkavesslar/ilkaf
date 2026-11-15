@@ -1,0 +1,23 @@
+---
+description: ILKA Neon PostgreSQL and migration rules
+globs: database/**/*
+alwaysApply: false
+---
+
+# Database
+
+Neon PostgreSQL is the primary database. Do not install local PostgreSQL unless an approved decision requires it.
+
+Before any schema change:
+
+1. Inspect current schema and existing migrations.
+2. Identify affected APIs and jobs.
+3. Add a versioned migration (Alembic vs raw SQL is **DECISION REQUIRED**).
+4. Test apply and document rollback.
+5. Update `docs/DATABASE_SCHEMA.md`.
+
+Never apply ad-hoc DDL to production. Never drop databases or Neon branches without explicit human approval.
+
+Do not autonomously `DROP`, `TRUNCATE`, `DELETE`, or `ALTER` production (or any Neon branch a human did not name).
+
+AI inspection: SELECT-only / `DATABASE_READONLY_URL` when provisioned. Connection strings live only in environment variables.

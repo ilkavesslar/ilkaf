@@ -1,0 +1,21 @@
+---
+description: ILKA security, RBAC, secrets, and sensitive-data handling
+alwaysApply: true
+---
+
+# Security
+
+Treat employee records, camera config, incidents, video snapshots, and audit logs as sensitive.
+
+- Load secrets from environment variables only. Never commit `.env`, Neon URLs, JWTs, Sentry DSNs, or keys.
+- Do not log passwords, tokens, connection strings, or camera credentials.
+- Prefer parameterized queries / ORM. No string-built SQL.
+- AuthN/RBAC details are **NOT DECIDED**; when APIs exist, authorize every sensitive path.
+
+**Neon MCP:** the Cursor plugin currently exposes write/destructive tools. Official read-only mode is `https://mcp.neon.tech/mcp?readonly=true` or OAuth without Full access (see `.cursor/README.md`). Until the plugin is read-only, agents must not call create/delete project, delete branch, `DROP`/`TRUNCATE`/`DELETE`/`ALTER`, migrations, or production writes unless a human explicitly asks. Prefer `DATABASE_READONLY_URL` / SELECT-only SQL.
+
+**GitHub MCP:** no merge to `main`, no delete repo/force-push/history rewrite.
+
+**Playwright MCP:** localhost/dev/staging only. No production destructive clicks.
+
+**Filesystem:** do not delete project trees without explicit human approval.

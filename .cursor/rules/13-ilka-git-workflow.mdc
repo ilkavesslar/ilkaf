@@ -1,0 +1,20 @@
+---
+description: ILKA git branching, PRs, and merge policy
+alwaysApply: true
+---
+
+# Git workflow
+
+Never develop directly on `main`. This clone may have **no remote** — do not create a GitHub repo unless the human names the owner.
+
+Long-lived: `main` (protected) ← `develop` ← work branches.
+
+Work branches: `feature/*`, `fix/*` (aliases `bugfix/`, `feat/`), `refactor/*`, `experiment/*`, plus `docs/`, `test/`, `chore/`. Integration branch: **`develop`** (not `development` until an ADR).
+
+One agent-owned feature branch at a time; do not blindly co-edit.
+
+Substantial work: branch → implement → tests → diff → review → PR → CI → **human approval** → merge. Quality gates: `docs/QUALITY_GATES.md`.
+
+AI must not: merge to `main`, merge PRs, delete branches/repos, force-push, or `git reset --hard` of shared history.
+
+Do not commit `.env`, keys, or model weights. Conventional Commits are required.

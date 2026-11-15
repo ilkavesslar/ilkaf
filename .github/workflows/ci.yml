@@ -1,0 +1,136 @@
+name: ci
+
+on:
+  push:
+    branches: [main, develop, feature/**]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/pyproject.toml
+      - name: Install backend
+        working-directory: backend
+        run: pip install -e ".[dev]"
+      - name: Lint
+        working-directory: backend
+        run: ruff check app
+      - name: Unit tests (SQLite)
+        env:
+          ENVIRONMENT: testing
+          DATABASE_URL: "sqlite+aiosqlite:///:memory:"
+        run: pytest tests/unit -v --tb=short
+      # No Torch, OpenCV, or weights in this job. The live smoke may skip here.
+      # cv-cpu-smoke is the job that must execute it.
+      - name: CV suite without detector weights
+        env:
+          ENVIRONMENT: testing
+          DATABASE_URL: "sqlite+aiosqlite:///:memory:"
+        run: pytest -c pytest-cv.ini -v --tb=short
+
+  cv-cpu-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Create isolated CPU environment
+        run: |
+          python -m venv .venv-cv
+          .venv-cv/bin/python -m pip install -U pip
+          .venv-cv/bin/python -m pip install "pytest>=8,<10" "opencv-python-headless==4.11.0.86"
+          .venv-cv/bin/python -m pip install "torch==2.6.0" "torchvision==0.21.0" --index-url https://download.pytorch.org/whl/cpu
+      - name: Fetch checksum-verified weights
+        run: .venv-cv/bin/python scripts/dev/fetch_person_detector_weights.py
+      - name: Live FileSource smoke
+        env:
+          ILKA_CV_PERSON_WEIGHTS: ${{ github.workspace }}/data/models/ssdlite320_mobilenet_v3_large_coco.pth
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          .venv-cv/bin/python -m pytest tests/cv_ai/test_cv_file_person_smoke.py -c pytest-cv.ini -v --tb=short --junitxml=cv-smoke.xml
+          .venv-cv/bin/python - <<'PY'
+          import sys
+          import xml.etree.ElementTree as ET
+
+          root = ET.parse("cv-smoke.xml").getroot()
+          suite = root if root.tag == "testsuite" else root.find("testsuite")
+          if suite is None:
+              sys.exit("cv smoke junit has no testsuite")
+          tests = int(suite.attrib.get("tests", "0"))
+          skipped = int(suite.attrib.get("skipped", "0"))
+          failures = int(suite.attrib.get("failures", "0"))
+          errors = int(suite.attrib.get("errors", "0"))
+          if tests != 1 or skipped or failures or errors:
+              sys.exit(
+                  "cv smoke must execute once without skip: "
+                  f"tests={tests} skipped={skipped} failures={failures} errors={errors}"
+              )
+          PY
+
+  backend-postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        # Disposable CI DB. Postgres 16 matches compose.yaml / ADR 0009.
+        # Neon shared-dev is 18; 18 is not required for foundation identity DDL
+        # and is unverified on this runner.
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ilka
+          POSTGRES_PASSWORD: ilka_dev_only
+          POSTGRES_DB: ilka
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ilka -d ilka"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/pyproject.toml
+      - name: Install backend
+        working-directory: backend
+        run: pip install -e ".[dev]"
+      - name: Postgres integration tests
+        env:
+          ENVIRONMENT: testing
+          ILKA_REQUIRE_POSTGRES_TESTS: "1"
+          ILKA_POSTGRES_URL: postgresql+asyncpg://ilka:ilka_dev_only@127.0.0.1:5432/ilka
+        run: pytest tests/integration -v -rs --tb=short
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build

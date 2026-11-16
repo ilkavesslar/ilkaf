@@ -119,9 +119,14 @@ def _record_waves(
 
 
 def _open_intelligence_pose() -> object | None:
-    """Prefer COCO-17 MediaPipe adapter; fall back to wrist-only reader."""
+    """Prefer TorchVision Keypoint R-CNN, then MediaPipe, then wrist-only reader."""
 
     root = Path(__file__).resolve().parents[3]
+    from cv.pose.torchvision_keypoint import TorchvisionKeypointPoseEstimator
+
+    keypoint = TorchvisionKeypointPoseEstimator()
+    if keypoint.open():
+        return keypoint
     coco = MediaPipePoseEstimator(root / "data" / "models" / "pose_landmarker_lite.task")
     if coco.open():
         return coco

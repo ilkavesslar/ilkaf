@@ -1,17 +1,29 @@
 # Local model weights (not committed)
 
-Person-detector weights are downloaded locally and stay out of Git.
+Person-detector and pose weights are downloaded locally and stay out of Git (`*.pth`, `*.task`).
 
-Approved fetch (checksum-verified):
+## Person detector (SSDLite)
 
 ```bash
 .venv-cv/bin/python scripts/dev/fetch_person_detector_weights.py
+export ILKA_CV_PERSON_WEIGHTS="$(pwd)/data/models/ssdlite320_mobilenet_v3_large_coco.pth"
 ```
 
-Expected file after a successful fetch:
+## Pose (Keypoint R-CNN, Intel Mac / CPU)
 
-```text
-data/models/ssdlite320_mobilenet_v3_large_coco.pth
+```bash
+.venv-cv/bin/python scripts/dev/fetch_pose_keypoint_rcnn.py
+export ILKA_CV_POSE_WEIGHTS="$(pwd)/data/models/keypointrcnn_resnet50_fpn_coco-fc266e95.pth"
 ```
 
-Then set `ILKA_CV_PERSON_WEIGHTS` in `.env` to that path. See `cv/detectors/person_cpu.py` for the pinned digest and `docs/development/startup.md` for setup.
+Optional MediaPipe Pose Landmarker (if `mediapipe` installs on your platform):
+
+```bash
+.venv-cv/bin/python scripts/dev/fetch_pose_landmarker.py
+```
+
+## Live HIE webcam
+
+```bash
+.venv-cv/bin/python scripts/dev/preview_webcam_hie.py --index 0
+```

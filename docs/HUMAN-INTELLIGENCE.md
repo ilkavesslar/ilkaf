@@ -71,10 +71,19 @@ Serialized contract changes use semantic versioning. Backward-compatible additio
 
 - `.venv-cv` pins Torch `2.2.2` and TorchVision `0.17.2`.
 - `CpuPersonDetector` with SSDLite320 MobileNetV3-Large is the default.
+- Live pose uses TorchVision Keypoint R-CNN (local weights) via `scripts/dev/preview_webcam_hie.py`; MediaPipe remains optional when a compatible wheel exists.
 - Weights are local and integrity-pinned; runtime model selection must not download weights.
 - No production accuracy, latency, throughput, or camera-capacity claim is made.
 
 SSDLite remains the default until a reproducible evaluation on the same inputs, thresholds, and machine profile justifies replacement.
+
+Live webcam (lab):
+
+```bash
+export ILKA_CV_PERSON_WEIGHTS="$(pwd)/data/models/ssdlite320_mobilenet_v3_large_coco.pth"
+export ILKA_CV_POSE_WEIGHTS="$(pwd)/data/models/keypointrcnn_resnet50_fpn_coco-fc266e95.pth"
+.venv-cv/bin/python scripts/dev/preview_webcam_hie.py --index 0
+```
 
 ### NVIDIA CUDA
 

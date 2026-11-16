@@ -1,4 +1,4 @@
-"""COCO-17 pose stage. Optional MediaPipe backend; honest missing joints otherwise."""
+"""COCO-17 pose stage. Optional TorchVision / MediaPipe backends; honest missing joints."""
 
 from cv.pose.coco17 import (
     COCO_17_NAMES,
@@ -13,6 +13,10 @@ from cv.pose.mediapipe_adapter import (
     MediaPipePoseEstimator,
     landmarks_to_coco17,
 )
+from cv.pose.torchvision_keypoint import (
+    MODEL_ID as TORCHVISION_KEYPOINT_MODEL_ID,
+    TorchvisionKeypointPoseEstimator,
+)
 
 __all__ = [
     "COCO_17_NAMES",
@@ -21,6 +25,8 @@ __all__ = [
     "NullPoseEstimator",
     "PoseEstimate",
     "PoseEstimator",
+    "TORCHVISION_KEYPOINT_MODEL_ID",
+    "TorchvisionKeypointPoseEstimator",
     "associate_poses",
     "landmarks_to_coco17",
     "unobserved_pose",

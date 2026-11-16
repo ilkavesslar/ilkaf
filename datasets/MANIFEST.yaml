@@ -1,0 +1,76 @@
+# License register only. This file is not a download list.
+# No dataset bytes were fetched when this manifest was written.
+# Review date for the notes below: 2026-11-16. Not legal advice.
+schema_version: 1
+downloaded: false
+entries:
+  - id: coco-2017-detection
+    task: person_detection
+    license_status: public_research
+    commercial_use: unclear
+    url: "https://cocodataset.org/#home"
+    notes: "Annotations and the COCO site are CC BY 4.0 and require attribution (https://cocodataset.org/dataset/termsofuse.htm). The COCO Consortium does not own the images. Each image stays under its Flickr license, and a large share are non-commercial. Image rights and annotation rights are separate. Do not download from this repo."
+    ilka_usage: requires_review
+  - id: coco-2017-keypoints
+    task: pose_estimation
+    license_status: public_research
+    commercial_use: unclear
+    url: "https://cocodataset.org/#keypoints-2017"
+    notes: "Keypoint annotations are part of COCO and follow the same terms as coco-2017-detection: CC BY 4.0 for annotations, Flickr licenses for images. Not a commercial-training grant. Do not download from this repo."
+    ilka_usage: requires_review
+  - id: crowdhuman
+    task: person_detection
+    license_status: restricted
+    commercial_use: no
+    url: "https://www.crowdhuman.org/download.html"
+    notes: "Download-page terms: non-commercial research and education only, no redistribution of the images, no fitness warranty, user indemnifies Megvii. Do not fetch, mirror, or commit the images."
+    ilka_usage: do_not_download_here
+  - id: crowdpose
+    task: pose_estimation
+    license_status: unknown
+    commercial_use: unclear
+    url: "https://github.com/jeffffffli/CrowdPose"
+    notes: "The repository publishes images and annotations and does not state a dataset license. GitHub issue jeffffffli/CrowdPose#14 was still open on 2026-11-16. The AlphaPose software license is not a license for these images. Do not download until a human records the grant."
+    ilka_usage: requires_review
+  - id: mot17
+    task: multi_object_tracking
+    license_status: restricted
+    commercial_use: no
+    url: "https://motchallenge.net/data/MOT17/"
+    notes: "MOTChallenge publishes MOT17 under CC BY-NC-SA 3.0 (attribution, non-commercial, share-alike). Re-check the deed on the exact archive before any use; the evaluation site has been reported offline. Do not download into this repo."
+    ilka_usage: do_not_download_here
+  - id: mot20
+    task: multi_object_tracking
+    license_status: restricted
+    commercial_use: no
+    url: "https://motchallenge.net/data/MOT20/"
+    notes: "MOTChallenge publishes MOT20 under CC BY-NC-SA 3.0 (attribution, non-commercial, share-alike). Same re-check rule as mot17. Crowded-scene tracking eval is not a grant to train or ship a commercial tracker. Do not download into this repo."
+    ilka_usage: do_not_download_here
+  - id: posetrack
+    task: pose_tracking
+    license_status: unknown
+    commercial_use: unclear
+    url: "https://posetrack.net/"
+    notes: "The publisher deed was not confirmed in this pass. Catalog tags such as CC BY-NC 4.0 are not treated as the grant. DensePose-PoseTrack is a different release and does not decide this one. Do not download until a human records the publisher terms."
+    ilka_usage: requires_review
+  - id: ntu-rgbd-120
+    task: action_recognition
+    license_status: restricted
+    commercial_use: no
+    url: "https://rose1.ntu.edu.sg/dataset/actionRecognition/"
+    notes: "ROSE Lab terms: academic research only, for researchers at educational or research institutes, non-commercial. Redistribution, derivation, and commercial use need express permission. Access is a request form plus the release agreement, not an anonymous URL. Do not download here."
+    ilka_usage: do_not_download_here
+  - id: ur-fall
+    task: fall_detection
+    license_status: unknown
+    commercial_use: unclear
+    url: "https://fenix.ur.edu.pl/~mkepski/ds/uf.html"
+    notes: "Official page documents 70 sequences (30 falls and 40 activities of daily living) and requires citation of Kwolek and Kepski, Computer Methods and Programs in Biomedicine, 2014. That page does not state a data license. Secondary CC BY-NC-SA 4.0 claims were not on the page fetched 2026-11-16. Do not download until a human records the grant."
+    ilka_usage: requires_review
+  - id: up-fall
+    task: fall_detection
+    license_status: unknown
+    commercial_use: unclear
+    url: "https://sites.google.com/up.edu.mx/har-up/"
+    notes: "Project site calls the set publicly available and asks for citation of Martinez-Villasenor et al., Sensors 2019, doi:10.3390/s19091988. The article is CC BY 4.0. That article license was not verified as the license of the video and sensor files. Do not download until a human records the grant."
+    ilka_usage: requires_review

@@ -12,6 +12,11 @@ Authoritative ADRs: [`DECISIONS.md`](./DECISIONS.md) and [`DECISIONS/`](./DECISI
 | Target system | [SYSTEM-ARCHITECTURE.md](./SYSTEM-ARCHITECTURE.md) | |
 | Cameras / video | [CAMERA-ARCHITECTURE.md](./CAMERA-ARCHITECTURE.md) | |
 | AI / CV pipeline | [AI-PIPELINE.md](./AI-PIPELINE.md) | Models: `AI_MODELS.md` |
+| Human Intelligence Engine | [HUMAN-INTELLIGENCE.md](./HUMAN-INTELLIGENCE.md) | ADR 0012; contract 1.0.0 |
+| HIE models / datasets | [models/HUMAN_INTELLIGENCE_MODELS.md](./models/HUMAN_INTELLIGENCE_MODELS.md) | Registry + licensing |
+| Intel Mac / NVIDIA profiles | [deployment/INTEL_MAC_AND_NVIDIA.md](./deployment/INTEL_MAC_AND_NVIDIA.md) | CUDA unverified without GPU |
+| HIE performance report | [agent-reports/human-intelligence-performance.md](./agent-reports/human-intelligence-performance.md) | Measured vs unverified |
+| HIE security/privacy | [agent-reports/human-intelligence-security-privacy.md](./agent-reports/human-intelligence-security-privacy.md) | Anonymous-by-default |
 | Events | [EVENT-ARCHITECTURE.md](./EVENT-ARCHITECTURE.md) | Redis **not** selected |
 | Security | [SECURITY-ARCHITECTURE.md](./SECURITY-ARCHITECTURE.md) | Root `SECURITY.md` baseline |
 | Data | [DATABASE-ARCHITECTURE.md](./DATABASE-ARCHITECTURE.md) | Phase-1 fields: `DATABASE_SCHEMA.md` |

@@ -9,7 +9,7 @@ from typing import Literal
 
 from cv.observation import Observation
 
-from app.schemas.detection import LiveObservationBox, LiveObservationItem
+from app.schemas.detection import LiveKeypoint, LiveObservationBox, LiveObservationItem
 
 _MAX_ITEMS = 50
 
@@ -40,6 +40,56 @@ def to_live_observation(
         track_id=track_id,
         moving=moving,
         waving=waving,
+    )
+
+
+def intelligence_to_live_observation(item: object, camera_id: str) -> LiveObservationItem:
+    """Map a PersonIntelligenceObservation to the public live feed (no secrets)."""
+
+    bbox = getattr(item, "bbox")
+    local_track_id = str(getattr(item, "local_track_id"))
+    numeric_track: int | None = None
+    if ":" in local_track_id:
+        suffix = local_track_id.rsplit(":", 1)[-1]
+        if suffix.startswith("t") and suffix[1:].isdigit():
+            numeric_track = int(suffix[1:])
+    activity = getattr(item, "activity_class", None)
+    activity_value = getattr(activity, "value", activity)
+    movement = getattr(item, "movement_state", None)
+    tracking = getattr(item, "tracking_status", None)
+    keypoints = []
+    for joint in getattr(item, "keypoints", ()) or ():
+        keypoints.append(
+            LiveKeypoint(
+                x=getattr(joint, "x", None),
+                y=getattr(joint, "y", None),
+                confidence=float(getattr(joint, "confidence", 0.0) or 0.0),
+                visibility=float(getattr(joint, "visibility", 0.0) or 0.0),
+            )
+        )
+    return LiveObservationItem(
+        observation_id=getattr(item, "observation_id"),
+        camera_id=camera_id,
+        object_class="person",
+        confidence=float(getattr(item, "detection_confidence")),
+        bounding_box=LiveObservationBox(
+            x_min=float(bbox.x_min),
+            y_min=float(bbox.y_min),
+            x_max=float(bbox.x_max),
+            y_max=float(bbox.y_max),
+        ),
+        observed_at=getattr(item, "timestamp").astimezone(UTC).isoformat(),
+        track_id=numeric_track,
+        local_track_id=local_track_id,
+        global_person_id=getattr(item, "global_person_id", None),
+        moving=movement == "moving",
+        waving=activity_value == "waving",
+        activity_class=str(activity_value) if activity_value is not None else None,
+        activity_confidence=float(getattr(item, "activity_confidence", 0.0) or 0.0),
+        movement_state=str(movement) if movement is not None else None,
+        tracking_status=str(tracking) if tracking is not None else None,
+        keypoints=keypoints,
+        schema_version=str(getattr(item, "schema_version", "") or "") or None,
     )
 
 

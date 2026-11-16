@@ -26,6 +26,15 @@ class LiveObservationBox(BaseModel):
     y_max: float
 
 
+class LiveKeypoint(BaseModel):
+    """COCO-17 joint. Missing joints use visibility 0 and null coordinates."""
+
+    x: float | None = None
+    y: float | None = None
+    confidence: float = 0.0
+    visibility: float = 0.0
+
+
 class LiveObservationItem(BaseModel):
     observation_id: UUID
     camera_id: str
@@ -34,8 +43,16 @@ class LiveObservationItem(BaseModel):
     bounding_box: LiveObservationBox
     observed_at: str
     track_id: int | None = None
+    local_track_id: str | None = None
+    global_person_id: str | None = None
     moving: bool = False
     waving: bool = False
+    activity_class: str | None = None
+    activity_confidence: float | None = None
+    movement_state: str | None = None
+    tracking_status: str | None = None
+    keypoints: list[LiveKeypoint] = Field(default_factory=list)
+    schema_version: str | None = None
 
 
 class LiveObservationsResponse(BaseModel):

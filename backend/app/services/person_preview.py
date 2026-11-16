@@ -11,16 +11,25 @@ from pathlib import Path
 
 from cv.frame import Frame
 from cv.gestures import GestureTracker, PoseCue, associate_cues, relative_x
+from cv.identity.anonymous import AnonymousIdentityMatcher
+from cv.intelligence.engine import HumanIntelligenceEngine
 from cv.movement import Movement, classify_movement
 from cv.observation import Observation
+from cv.pose.mediapipe_adapter import MediaPipePoseEstimator
 from cv.pose_wrists import WristPoseReader
 from cv.sampling import InferenceClock
 from cv.tracking import PersonTracker, Track
 
 from app.core.config import get_settings
 from app.schemas.detection import LiveObservationItem
-from app.services.detection_state import get_detection_state, to_live_observation
+from app.services.detection_state import (
+    get_detection_state,
+    intelligence_to_live_observation,
+    to_live_observation,
+)
 from app.services.lab_camera_streams import SharedFrame, get_lab_camera_hub
+
+_IDENTITY = AnonymousIdentityMatcher()
 
 _LOG = logging.getLogger("ilka.detection")
 _UNAVAILABLE = "Person detection is unavailable."
@@ -109,20 +118,43 @@ def _record_waves(
         gestures.update(track.track_id, when, left, right)
 
 
-class _CameraActivity:
-    """Tracker, movement, and waving for one camera. Not shared across cameras."""
+def _open_intelligence_pose() -> object | None:
+    """Prefer COCO-17 MediaPipe adapter; fall back to wrist-only reader."""
 
-    def __init__(self, pose: object | None = None) -> None:
+    root = Path(__file__).resolve().parents[3]
+    coco = MediaPipePoseEstimator(root / "data" / "models" / "pose_landmarker_lite.task")
+    if coco.open():
+        return coco
+    return _open_pose()
+
+
+class _CameraActivity:
+    """Per-camera human intelligence. Uses HIE when available; legacy path as fallback."""
+
+    def __init__(self, pose: object | None = None, *, camera_id: str | None = None) -> None:
+        self.camera_id = camera_id or "camera"
         self.tracker = PersonTracker()
         self.movements: dict[int, Movement] = {}
         self.gestures = GestureTracker()
         self._pose = pose
+        self._engine: HumanIntelligenceEngine | None = None
+        try:
+            self._engine = HumanIntelligenceEngine(
+                self.camera_id,
+                pose_estimator=pose if hasattr(pose, "estimate") else None,
+                identity_matcher=_IDENTITY,
+            )
+        except Exception:
+            _LOG.exception("human intelligence engine init failed; using legacy preview path")
+            self._engine = None
 
     def close(self) -> None:
         pose = self._pose
         self._pose = None
         if pose is not None:
-            pose.close()
+            close = getattr(pose, "close", None)
+            if callable(close):
+                close()
 
     def observe(
         self,
@@ -130,6 +162,13 @@ class _CameraActivity:
         found: list[Observation],
         frame: Frame,
     ) -> list[LiveObservationItem]:
+        if self._engine is not None:
+            try:
+                intel = self._engine.process_frame(frame, found)
+                return [intelligence_to_live_observation(item, camera_id) for item in intel]
+            except Exception:
+                _LOG.exception("human intelligence process_frame failed; using legacy path")
+
         when = frame.processed_at
         tracks = self.tracker.update(found, when)
         active = {track.track_id for track in tracks}
@@ -209,7 +248,11 @@ class PersonPreviewWorker:
 
     def _run(self) -> None:
         clock = InferenceClock(self._interval)
-        activity = self._activity if self._activity is not None else _CameraActivity(_open_pose())
+        activity = (
+            self._activity
+            if self._activity is not None
+            else _CameraActivity(_open_intelligence_pose(), camera_id=self.camera_id)
+        )
         try:
             while not self._stop.is_set():
                 try:

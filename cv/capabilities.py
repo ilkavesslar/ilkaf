@@ -79,16 +79,34 @@ def probe_person() -> DetectionCapability:
 def _unimplemented() -> list[DetectionCapability]:
     return [
         DetectionCapability(
+            "tracking",
+            "Multi-person tracking",
+            "available",
+            "Camera-scoped anonymous tracking is available (PROVISIONAL).",
+        ),
+        DetectionCapability(
+            "pose",
+            "COCO-17 pose estimation",
+            "not_configured",
+            "Pose requires a local MediaPipe .task model under data/models/.",
+        ),
+        DetectionCapability(
+            "activity",
+            "Temporal activity recognition",
+            "available",
+            "Rule-based temporal activities are available (PROVISIONAL; uncalibrated).",
+        ),
+        DetectionCapability(
+            "anonymous_identity",
+            "Anonymous cross-camera identity",
+            "available",
+            "Probabilistic anonymous IDs only; no facial recognition.",
+        ),
+        DetectionCapability(
             "ppe",
             "PPE detection",
             "not_implemented",
             "No PPE model is implemented.",
-        ),
-        DetectionCapability(
-            "fall",
-            "Fall detection",
-            "not_implemented",
-            "No fall or person-down model is implemented.",
         ),
         DetectionCapability(
             "fire_smoke",

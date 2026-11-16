@@ -1,0 +1,78 @@
+# PROVISIONAL lab model cards. Not a production ADR.
+# This file does not vendor weights and does not store accuracy numbers.
+schema_version: 1
+default_model_id: ssdlite320-mobilenet-v3
+models:
+  - model_id: ssdlite320-mobilenet-v3
+    task: person_detection
+    framework: torchvision
+    device_profiles:
+      - intel_mac_cpu
+    weights_policy: local_pin
+    provenance: pretrained
+    status: lab_verified
+    measured: true
+    cv_detector_name: torchvision-ssdlite
+    cv_model_id: torchvision-ssdlite320-mobilenet-v3-large
+    weights_env: ILKA_CV_PERSON_WEIGHTS
+    metrics_reported: false
+    notes: "Default on Intel Mac CPU because CpuPersonDetector already runs this TorchVision SSDLite320 MobileNetV3-Large checkpoint on CPU and rejects any file whose SHA-256 does not match the pin in cv/detectors/person_cpu.py. The digest is not copied here. Weights are not in git. A human may fetch them only with scripts/dev/fetch_person_detector_weights.py. nvidia_cuda is not a profile: the adapter forces CPU. No accuracy is stated."
+  - model_id: ultralytics-yolo
+    task: person_detection
+    framework: ultralytics
+    device_profiles:
+      - intel_mac_cpu
+      - nvidia_cuda
+    weights_policy: not_bundled
+    provenance: pretrained
+    status: placeholder
+    measured: false
+    cv_detector_name: yolo
+    cv_model_id: ultralytics-yolo
+    weights_env: ILKA_CV_YOLO_WEIGHTS
+    metrics_reported: false
+    notes: "Name of the optional lab adapter. No YOLO checkpoint or digest is registered. Device profiles are unmeasured candidates. The adapter must not be given a bare model name, because that path downloads weights. Selection waits on a same-machine bake-off against ssdlite320-mobilenet-v3."
+  - model_id: rtdetr-placeholder
+    task: person_detection
+    framework: unspecified
+    device_profiles:
+      - intel_mac_cpu
+      - nvidia_cuda
+    weights_policy: not_bundled
+    provenance: pretrained
+    status: placeholder
+    measured: false
+    cv_detector_name: ""
+    cv_model_id: ""
+    weights_env: ""
+    metrics_reported: false
+    notes: "Name only. No RT-DETR runtime, weights, pin, or measurement is registered. Do not prefer it because it is newer or widely cited. A bake-off has to measure latency and detection counts on the same frames as SSDLite."
+  - model_id: mediapipe-pose-placeholder
+    task: pose_estimation
+    framework: mediapipe
+    device_profiles:
+      - intel_mac_cpu
+    weights_policy: not_bundled
+    provenance: pretrained
+    status: placeholder
+    measured: false
+    cv_detector_name: ""
+    cv_model_id: ""
+    weights_env: ""
+    metrics_reported: false
+    notes: "Placeholder for a future COCO-17 pose estimator. No MediaPipe package, model file, or OKS result is registered. scripts/eval/metrics.py leaves OKS uncomputed on purpose."
+  - model_id: rtmpose-placeholder
+    task: pose_estimation
+    framework: mmpose
+    device_profiles:
+      - intel_mac_cpu
+      - nvidia_cuda
+    weights_policy: not_bundled
+    provenance: pretrained
+    status: placeholder
+    measured: false
+    cv_detector_name: ""
+    cv_model_id: ""
+    weights_env: ""
+    metrics_reported: false
+    notes: "Placeholder only. No RTMPose checkpoint is bundled or pinned. Device profiles are unmeasured candidates. No keypoint score is claimed."

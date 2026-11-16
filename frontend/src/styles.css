@@ -318,11 +318,18 @@ input {
   z-index: 1;
   margin: 0;
   padding: 0;
-  list-style: none;
   pointer-events: none;
 }
 
-.detect-overlay li {
+.detect-boxes {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detect-boxes li {
   position: absolute;
   border: 2px solid var(--text);
   box-sizing: border-box;
@@ -332,6 +339,7 @@ input {
   position: absolute;
   left: 0;
   top: 0;
+  z-index: 2;
   max-width: 18rem;
   overflow: hidden;
   padding: 2px 6px;
@@ -341,6 +349,31 @@ input {
   line-height: 1.3;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.detect-skeleton {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.detect-bone {
+  stroke: #3b82f6;
+  stroke-width: 0.008;
+  stroke-linecap: round;
+}
+
+.detect-joint {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: #3b82f6;
+  pointer-events: none;
 }
 
 .monitor {

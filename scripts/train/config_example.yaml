@@ -1,0 +1,31 @@
+# Template only. This file is not a finished run.
+# claim_training_completed must stay false here.
+# Do not point dataset.manifest_id at a do_not_download_here row.
+schema_version: 1
+run:
+  claim_training_completed: false
+  output_checkpoint: null
+dataset:
+  manifest_id: ""
+  split: ""
+  annotation_policy: publisher_or_named_human
+model:
+  init_model_id: ssdlite320-mobilenet-v3
+  intended_provenance_after_a_real_run: finetuned
+optim:
+  optimizer: sgd
+  learning_rate: 0.001
+  momentum: 0.9
+  weight_decay: 0.0005
+  epochs: 1
+  batch_size: 2
+  seed: 0
+runtime:
+  device_profile: intel_mac_cpu
+  workers: 0
+  download_weights: false
+  download_datasets: false
+eval:
+  metrics: precision_recall_f1
+  oks: not_implemented
+  idf1: not_implemented

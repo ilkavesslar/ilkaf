@@ -104,7 +104,25 @@ describe("detection overlay", () => {
       confidence: 0.5,
       box: { xMin: 0.1, yMin: 0.2, xMax: 0.4, yMax: 0.8 },
       observedAt: "2026-11-08T00:00:00+00:00",
+      keypoints: [],
+      activityClass: null,
     });
+  });
+
+  it("prefers activity_class on the label when present", () => {
+    expect(
+      toOverlayObservation({
+        observation_id: "obs-3",
+        camera_id: "cam-1",
+        object_class: "person",
+        confidence: 0.88,
+        bounding_box: { x_min: 0, y_min: 0, x_max: 1, y_max: 1 },
+        observed_at: "2026-11-08T00:00:00+00:00",
+        track_id: 4,
+        activity_class: "person_down",
+        global_person_id: "anon-abcdef12",
+      }).label,
+    ).toBe("Person #04 · person down · anon anon-abc · 88%");
   });
 });
 

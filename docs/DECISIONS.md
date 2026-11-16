@@ -39,6 +39,7 @@ Status: **APPROVED** | **PROVISIONAL** | **NOT DECIDED**
 | P8 | Browser video protocol | |
 | P9 | Edge runtime (TensorRT / ONNX / PyTorch) | |
 | P10 | Migration tool | Alembic accepted in ADR 0008 |
+| A19 | Human Intelligence Engine architecture | **PROVISIONAL** — [ADR 0012](./DECISIONS/0012-human-intelligence-engine.md) |
 
 ## NOT DECIDED
 
